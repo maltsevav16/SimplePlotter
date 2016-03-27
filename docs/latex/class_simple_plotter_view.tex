@@ -1,0 +1,97 @@
+\hypertarget{class_simple_plotter_view}{}\section{РљР»Р°СЃСЃ Simple\+Plotter\+View}
+\label{class_simple_plotter_view}\index{Simple\+Plotter\+View@{Simple\+Plotter\+View}}
+
+
+Основной класс проекта  
+
+
+
+
+{\ttfamily \#include $<$simpleplotterview.\+h$>$}
+
+Р“СЂР°С„ РЅР°СЃР»РµРґРѕРІР°РЅРёСЏ\+:Simple\+Plotter\+View\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_simple_plotter_view}
+\end{center}
+\end{figure}
+\subsection*{РћС‚РєСЂС‹С‚С‹Рµ С‡Р»РµРЅС‹}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_simple_plotter_view_a4e9079ddecf20ade6a13c48f5c13a09e}{Simple\+Plotter\+View} (Q\+Widget $\ast$parent=0)
+\begin{DoxyCompactList}\small\item\em Конструктор \end{DoxyCompactList}\item 
+\hyperlink{class_simple_plotter_view_ae04b23819fa8728ad605006c261cd102}{$\sim$\+Simple\+Plotter\+View} ()\hypertarget{class_simple_plotter_view_ae04b23819fa8728ad605006c261cd102}{}\label{class_simple_plotter_view_ae04b23819fa8728ad605006c261cd102}
+
+\begin{DoxyCompactList}\small\item\em Деструктор \end{DoxyCompactList}\item 
+void \hyperlink{class_simple_plotter_view_a920ed0d07a22e2b537721b5acdd286e8}{append\+Plot} (\hyperlink{class_simple2_d_plot}{Simple2\+D\+Plot} a, Q\+Color color=Qt\+::red)
+\begin{DoxyCompactList}\small\item\em Добавить новый график \end{DoxyCompactList}\item 
+void \hyperlink{class_simple_plotter_view_a03a0c23480fdcb51b74832767aa2e822}{remove\+Plot} (std\+::string name)
+\begin{DoxyCompactList}\small\item\em Удалить график \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{РџРѕРґСЂРѕР±РЅРѕРµ РѕРїРёСЃР°РЅРёРµ}
+Основной класс проекта 
+
+Основной класс, потомок Q\+Graphics\+View 
+
+\subsection{РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ(С‹)}
+\index{Simple\+Plotter\+View@{Simple\+Plotter\+View}!Simple\+Plotter\+View@{Simple\+Plotter\+View}}
+\index{Simple\+Plotter\+View@{Simple\+Plotter\+View}!Simple\+Plotter\+View@{Simple\+Plotter\+View}}
+\subsubsection[{\texorpdfstring{Simple\+Plotter\+View(\+Q\+Widget $\ast$parent=0)}{SimplePlotterView(QWidget *parent=0)}}]{\setlength{\rightskip}{0pt plus 5cm}Simple\+Plotter\+View\+::\+Simple\+Plotter\+View (
+\begin{DoxyParamCaption}
+\item[{Q\+Widget $\ast$}]{parent = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [explicit]}}\hypertarget{class_simple_plotter_view_a4e9079ddecf20ade6a13c48f5c13a09e}{}\label{class_simple_plotter_view_a4e9079ddecf20ade6a13c48f5c13a09e}
+
+
+Конструктор 
+
+
+\begin{DoxyParams}{РђСЂРіСѓРјРµРЅС‚С‹}
+{\em parent} & Родительский виджет \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{РњРµС‚РѕРґС‹}
+\index{Simple\+Plotter\+View@{Simple\+Plotter\+View}!append\+Plot@{append\+Plot}}
+\index{append\+Plot@{append\+Plot}!Simple\+Plotter\+View@{Simple\+Plotter\+View}}
+\subsubsection[{\texorpdfstring{append\+Plot(\+Simple2\+D\+Plot a, Q\+Color color=\+Qt\+::red)}{appendPlot(Simple2DPlot a, QColor color=Qt::red)}}]{\setlength{\rightskip}{0pt plus 5cm}void Simple\+Plotter\+View\+::append\+Plot (
+\begin{DoxyParamCaption}
+\item[{{\bf Simple2\+D\+Plot}}]{a, }
+\item[{Q\+Color}]{color = {\ttfamily Qt\+:\+:red}}
+\end{DoxyParamCaption}
+)}\hypertarget{class_simple_plotter_view_a920ed0d07a22e2b537721b5acdd286e8}{}\label{class_simple_plotter_view_a920ed0d07a22e2b537721b5acdd286e8}
+
+
+Добавить новый график 
+
+
+\begin{DoxyParams}{РђСЂРіСѓРјРµРЅС‚С‹}
+{\em a} & объект типа \hyperlink{class_simple2_d_plot}{Simple2\+D\+Plot}, хранящий информацию о графике \\
+\hline
+{\em color} & цвет \\
+\hline
+\end{DoxyParams}
+\index{Simple\+Plotter\+View@{Simple\+Plotter\+View}!remove\+Plot@{remove\+Plot}}
+\index{remove\+Plot@{remove\+Plot}!Simple\+Plotter\+View@{Simple\+Plotter\+View}}
+\subsubsection[{\texorpdfstring{remove\+Plot(std\+::string name)}{removePlot(std::string name)}}]{\setlength{\rightskip}{0pt plus 5cm}Simple\+Plotter\+View\+::remove\+Plot (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{name}
+\end{DoxyParamCaption}
+)}\hypertarget{class_simple_plotter_view_a03a0c23480fdcb51b74832767aa2e822}{}\label{class_simple_plotter_view_a03a0c23480fdcb51b74832767aa2e822}
+
+
+Удалить график 
+
+
+\begin{DoxyParams}{РђСЂРіСѓРјРµРЅС‚С‹}
+{\em name} & имя графика \\
+\hline
+\end{DoxyParams}
+
+
+РћР±СЉСЏРІР»РµРЅРёСЏ Рё РѕРїРёСЃР°РЅРёСЏ С‡Р»РµРЅРѕРІ РєР»Р°СЃСЃРѕРІ РЅР°С…РѕРґСЏС‚СЃСЏ РІ С„Р°Р№Р»Р°С…\+:\begin{DoxyCompactItemize}
+\item 
+simpleplotterview.\+h\item 
+simpleplotterview.\+cpp\end{DoxyCompactItemize}

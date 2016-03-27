@@ -1,0 +1,133 @@
+\hypertarget{class_simple2_d_plot}{}\section{РљР»Р°СЃСЃ Simple2\+D\+Plot}
+\label{class_simple2_d_plot}\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+
+
+Класс, хранящий информацию о графике  
+
+
+
+
+{\ttfamily \#include $<$simple2dplot.\+h$>$}
+
+\subsection*{РћС‚РєСЂС‹С‚С‹Рµ С‡Р»РµРЅС‹}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_simple2_d_plot_a74b70aa66b161adf0c464b123fb80338}{Simple2\+D\+Plot} (std\+::string name, Q\+Vector$<$ Q\+Point $>$ points)
+\begin{DoxyCompactList}\small\item\em Конструктор по вектору точек. \end{DoxyCompactList}\item 
+\hyperlink{class_simple2_d_plot_ad3dc6487722709085782540894020328}{Simple2\+D\+Plot} (std\+::string name, std\+::function$<$ double(double)$>$ func, double lower, double upper, double step)
+\begin{DoxyCompactList}\small\item\em Конструктор по функции. \end{DoxyCompactList}\item 
+{\footnotesize template$<$typename T $>$ }\\\hyperlink{class_simple2_d_plot_ad143bd7f095b88695354b10a4ebc0d07}{Simple2\+D\+Plot} (std\+::string name, Q\+Vector$<$ Q\+Pair$<$ T, T $>$ $>$ points)
+\begin{DoxyCompactList}\small\item\em Конструктор по списку точек \end{DoxyCompactList}\item 
+std\+::string \hyperlink{class_simple2_d_plot_a15e3412379e8a799871e274f3140b4b4}{get\+Name} () const 
+\begin{DoxyCompactList}\small\item\em Возвращает имя \end{DoxyCompactList}\item 
+points\+Vector \hyperlink{class_simple2_d_plot_a76cd841505fd2db3d1b2c57987e5375c}{get\+Points} () const 
+\begin{DoxyCompactList}\small\item\em Возвращает Список точек \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{РџРѕРґСЂРѕР±РЅРѕРµ РѕРїРёСЃР°РЅРёРµ}
+Класс, хранящий информацию о графике 
+
+\subsection{РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ(С‹)}
+\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}!Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}!Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+\subsubsection[{\texorpdfstring{Simple2\+D\+Plot(std\+::string name, Q\+Vector$<$ Q\+Point $>$ points)}{Simple2DPlot(std::string name, QVector< QPoint > points)}}]{\setlength{\rightskip}{0pt plus 5cm}Simple2\+D\+Plot\+::\+Simple2\+D\+Plot (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{name, }
+\item[{Q\+Vector$<$ Q\+Point $>$}]{points}
+\end{DoxyParamCaption}
+)}\hypertarget{class_simple2_d_plot_a74b70aa66b161adf0c464b123fb80338}{}\label{class_simple2_d_plot_a74b70aa66b161adf0c464b123fb80338}
+
+
+Конструктор по вектору точек. 
+
+
+\begin{DoxyParams}{РђСЂРіСѓРјРµРЅС‚С‹}
+{\em name} & название графика \\
+\hline
+{\em points} & вектор точек \\
+\hline
+\end{DoxyParams}
+\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}!Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}!Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+\subsubsection[{\texorpdfstring{Simple2\+D\+Plot(std\+::string name, std\+::function$<$ double(double)$>$ func, double lower, double upper, double step)}{Simple2DPlot(std::string name, std::function< double(double)> func, double lower, double upper, double step)}}]{\setlength{\rightskip}{0pt plus 5cm}Simple2\+D\+Plot\+::\+Simple2\+D\+Plot (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{name, }
+\item[{std\+::function$<$ double(double)$>$}]{func, }
+\item[{double}]{lower, }
+\item[{double}]{upper, }
+\item[{double}]{step}
+\end{DoxyParamCaption}
+)}\hypertarget{class_simple2_d_plot_ad3dc6487722709085782540894020328}{}\label{class_simple2_d_plot_ad3dc6487722709085782540894020328}
+
+
+Конструктор по функции. 
+
+
+\begin{DoxyParams}{РђСЂРіСѓРјРµРЅС‚С‹}
+{\em name} & название графика \\
+\hline
+{\em func} & функция double -\/$>$ double \\
+\hline
+{\em lower} & нижняя граница \\
+\hline
+{\em upper} & верхняя граница \\
+\hline
+{\em step} & шаг \\
+\hline
+\end{DoxyParams}
+\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}!Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}!Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+\subsubsection[{\texorpdfstring{Simple2\+D\+Plot(std\+::string name, Q\+Vector$<$ Q\+Pair$<$ T, T $>$ $>$ points)}{Simple2DPlot(std::string name, QVector< QPair< T, T > > points)}}]{\setlength{\rightskip}{0pt plus 5cm}template$<$typename T $>$ template$<$ typename T $>$ Simple2\+D\+Plot\+::\+Simple2\+D\+Plot (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{name, }
+\item[{Q\+Vector$<$ Q\+Pair$<$ T, T $>$ $>$}]{points}
+\end{DoxyParamCaption}
+)}\hypertarget{class_simple2_d_plot_ad143bd7f095b88695354b10a4ebc0d07}{}\label{class_simple2_d_plot_ad143bd7f095b88695354b10a4ebc0d07}
+
+
+Конструктор по списку точек 
+
+
+\begin{DoxyParams}{РђСЂРіСѓРјРµРЅС‚С‹}
+{\em name} & название графика \\
+\hline
+{\em points} & список точек в виде пар x, y \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{РњРµС‚РѕРґС‹}
+\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}!get\+Name@{get\+Name}}
+\index{get\+Name@{get\+Name}!Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+\subsubsection[{\texorpdfstring{get\+Name() const }{getName() const }}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string Simple2\+D\+Plot\+::get\+Name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\hypertarget{class_simple2_d_plot_a15e3412379e8a799871e274f3140b4b4}{}\label{class_simple2_d_plot_a15e3412379e8a799871e274f3140b4b4}
+
+
+Возвращает имя 
+
+\begin{DoxyReturn}{Р’РѕР·РІСЂР°С‰Р°РµС‚}
+имя графика 
+\end{DoxyReturn}
+\index{Simple2\+D\+Plot@{Simple2\+D\+Plot}!get\+Points@{get\+Points}}
+\index{get\+Points@{get\+Points}!Simple2\+D\+Plot@{Simple2\+D\+Plot}}
+\subsubsection[{\texorpdfstring{get\+Points() const }{getPoints() const }}]{\setlength{\rightskip}{0pt plus 5cm}points\+Vector Simple2\+D\+Plot\+::get\+Points (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+) const}\hypertarget{class_simple2_d_plot_a76cd841505fd2db3d1b2c57987e5375c}{}\label{class_simple2_d_plot_a76cd841505fd2db3d1b2c57987e5375c}
+
+
+Возвращает Список точек 
+
+\begin{DoxyReturn}{Р’РѕР·РІСЂР°С‰Р°РµС‚}
+список точек 
+\end{DoxyReturn}
+
+
+РћР±СЉСЏРІР»РµРЅРёСЏ Рё РѕРїРёСЃР°РЅРёСЏ С‡Р»РµРЅРѕРІ РєР»Р°СЃСЃРѕРІ РЅР°С…РѕРґСЏС‚СЃСЏ РІ С„Р°Р№Р»Р°С…\+:\begin{DoxyCompactItemize}
+\item 
+simple2dplot.\+h\item 
+simple2dplot.\+cpp\end{DoxyCompactItemize}
