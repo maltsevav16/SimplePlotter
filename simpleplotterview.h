@@ -34,11 +34,11 @@ public:
 	*  \param a объект типа Simple2DPlot, хранящий информацию о графике
 	*  \param color цвет
 	*/
-//	void appendPlot(Simple2DPlot a, QColor color = Qt::red);
-	/*! \fn removePlot(std::string  name);
-	*  \brief Удалить график
-	*  \param name имя графика
-	*/
+	//	void appendPlot(Simple2DPlot a, QColor color = Qt::red);
+		/*! \fn removePlot(std::string  name);
+		*  \brief Удалить график
+		*  \param name имя графика
+		*/
 	void removePlot(std::string  name);
 private:
 	void hidePoints();
@@ -46,21 +46,21 @@ private:
 
 	QGraphicsScene *scene;
 	QTimer *timer;
-//	QVector<Simple2DPlot> data;
+	//	QVector<Simple2DPlot> data;
 	qreal radius = 0.05;
-    const int POINTSONSCREEN = 1000;
+	const int POINTSONSCREEN = 1000;
 	const qreal MAXCOORD = 1e6;
-    const qreal MINCOORD = 0.1;
+	const qreal MINCOORD = 0.1;
 	QVector<QPair<std::string, QGraphicsItemGroup*> > pointGroups;
-    QVector<QGraphicsPathItem*> pathGroups;
-    QVector<QPair<std::string,Lepton::CompiledExpression> > expressions;
-    const QString HELPSTRING = "This is a simple plotter QT plugin.\nHotkeys: ZX - Zoom x2, QE - Rotate 15 degrees,\nH - Help, numbers - to remove plots ";
+	QVector<QGraphicsPathItem*> pathGroups;
+	QVector<QPair<std::string, Lepton::CompiledExpression> > expressions;
+	const QString HELPSTRING = "This is a simple plotter QT plugin.\nHotkeys: ZX - Zoom x2, QE - Rotate 15 degrees,\nH - Help, numbers - to remove plots ";
 	QGraphicsSimpleTextItem * board;
 	QPen coordPen;
-    const int MAXPLOTCOUNT = 8;
-    QVector<QColor> Colors = {Qt::red, Qt::cyan, Qt::magenta,Qt::blue, Qt::darkMagenta, Qt::darkRed, Qt::darkBlue, Qt::darkCyan};
-    int plotCount = 0;
-    bool dialogOpen = false;
+	const int MAXPLOTCOUNT = 8;
+	QVector<QColor> Colors = { Qt::red, Qt::cyan, Qt::magenta,Qt::blue, Qt::darkMagenta, Qt::darkRed, Qt::darkBlue, Qt::darkCyan };
+	int plotCount = 0;
+	bool dialogOpen = false;
 private:
 	void wheelEvent(QWheelEvent *event);
 	void updatePlotScene();
@@ -72,10 +72,10 @@ private:
 	void mouseMoveEvent(QMouseEvent *e);
 	void paintEvent(QPaintEvent *e);
 	void addUserPlot();
-    void redraw();
-    void showError(QString text);
-    void mouseReleaseEvent(QMouseEvent * e);
-    void updateBoard(QPointF scenePos);
+	void redraw();
+	void showError(QString text);
+	void mouseReleaseEvent(QMouseEvent * e);
+	void updateBoard(QPointF scenePos);
 };
 
 #endif // SIMPLEPLOTTERVIEW_H

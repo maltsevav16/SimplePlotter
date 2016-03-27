@@ -33,7 +33,7 @@ Simple2DPlot::Simple2DPlot(std::string name, std::function<double(double)> func,
 	for (int i = 0;i < pointNumber; ++i) {
 		try {
 			double value = func(x);
-            //if (isnan(value)) continue;
+			//if (isnan(value)) continue;
 			points.push_back(QPair<double, double>(x, func(x)));
 		}
 		catch (...) {
