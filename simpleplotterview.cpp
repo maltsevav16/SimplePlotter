@@ -200,7 +200,13 @@ void SimplePlotterView::addUserPlot() {
 	if (!ok) return;
 	try {
 		Lepton::CompiledExpression  expression = Lepton::Parser::parse(expr).optimize().createCompiledExpression();
-		expressions.push_back(QPair<std::string, Lepton::CompiledExpression>(expr, expression));
+        auto vars = expression.getVariables();
+        if(vars.size()>1 || (vars.size()==1&& !vars.count("x"))){
+            showError("Wrong variable name");
+            return;
+        }
+
+        expressions.push_back(QPair<std::string, Lepton::CompiledExpression>(expr, expression));
 		plotCount++;
 		redraw();
 	}
