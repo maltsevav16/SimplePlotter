@@ -18,6 +18,7 @@ SimplePlotterView::SimplePlotterView(QWidget * parent)
 	this->setDragMode(QGraphicsView::ScrollHandDrag);
 	this->setMouseTracking(true);
 	initCoordSystem();
+    scale(100,100);
 }
 
 void SimplePlotterView::wheelEvent(QWheelEvent *event) {
@@ -87,13 +88,13 @@ void SimplePlotterView::zoom(qreal factor) {
 		return qMax(qAbs(point.x()), qAbs(point.y()));
 	};
 
-	if (factor<1 && qMax(getMaxCoord(sceneBotRight), getMaxCoord(sceneTopLeft))>MAXCOORD) {
+    if (factor<1 && qMax(getMaxCoord(sceneBotRight), getMaxCoord(sceneTopLeft))>MAXCOORD/2) {
 		return;
 	}
 	if (factor > 1) {
 		double minDelta = qMin(qAbs(sceneBotRight.x() - sceneTopLeft.x()),
 			qAbs(sceneBotRight.y() - sceneTopLeft.y()));
-		if (minDelta < MINCOORD)
+        if (minDelta < MINCOORD)
 		{
 			return;
 		}
@@ -217,6 +218,7 @@ void SimplePlotterView::addUserPlot() {
 }
 
 void SimplePlotterView::redraw() {
+    MAXCOORD = 10000;
 	auto rect = viewport()->rect();
 	for (int i = 0;i < pathGroups.size();++i) {
 		scene->removeItem(pathGroups[i]);
@@ -228,21 +230,46 @@ void SimplePlotterView::redraw() {
 	QPointF botRight = mapToScene(rect.bottomRight());
 	double delta = (botRight.x() - topLeft.x());
 	double deltaDiv = delta / POINTSONSCREEN;
+    bool prevInfinity;
+    int maxCount = 0;
 	for (int i = 0;i < plotCount;++i) {
+        prevInfinity = false;
 		Lepton::CompiledExpression expression = expressions[i].second;
 		QVector<QPointF> points;
 		if (!expression.getVariables().count("x")) {
-			for (double x = topLeft.x() - delta;x <= botRight.x() + delta;x += deltaDiv) {
+            for (double x = topLeft.x() - delta/2;x <= botRight.x() + delta/2;x += deltaDiv) {
 				points.push_back(QPointF(x, -expression.evaluate()));
 			}
 		}
 		else {
 			double & x = expression.getVariableReference("x");
 
-			x = topLeft.x() - delta;
-			for (;x <= botRight.x() + delta;x += deltaDiv) {
-				points.push_back(QPointF(x, -expression.evaluate()));
-			}
+            x = topLeft.x() - delta/2;
+            for (;x <= botRight.x() + delta/2;x += deltaDiv) {
+                   auto maxV = testLimit(true, expression, x, deltaDiv);
+                   if(maxV.first){
+                       maxCount++;
+                       if(!prevInfinity)
+                                              points.push_back(QPointF(x,-MAXCOORD * 2));
+                               prevInfinity = true;
+                                continue;
+                   }
+                   auto minV = testLimit(false, expression, x, deltaDiv);
+                   if(minV.first){
+                       maxCount++;
+                       if(!prevInfinity)
+                           points.push_back(QPointF(x,MAXCOORD * 2));
+                       prevInfinity = true;
+                       continue;
+                   }
+                  prevInfinity = false;
+                  if(qAbs(maxV.second)>qAbs(minV.second)){
+                      points.push_back(QPointF(x, -maxV.second));
+                  }
+                  else{
+                      points.push_back(QPointF(x, -minV.second));
+                  }
+                }
 		}
 		QPainterPath path(points[0]);
 		for (int i = 1;i < points.size();++i) {
@@ -253,6 +280,11 @@ void SimplePlotterView::redraw() {
 		pathPen.setWidthF(2);
 		auto pathItem = scene->addPath(path, pathPen);
 		pathGroups.push_back(pathItem);
+        if(maxCount > 20){
+            //to prevent big red square
+            limitZoom();
+
+        }
 	}
 }
 
@@ -263,6 +295,7 @@ void SimplePlotterView::showError(QString text) {
 
 void SimplePlotterView::mouseReleaseEvent(QMouseEvent *e) {
 	QGraphicsView::mouseReleaseEvent(e);
+
 	redraw();
 }
 
@@ -274,3 +307,47 @@ void SimplePlotterView::updateBoard(QPointF scenePos) {
 	}
 	board->setText(formatted);
 }
+
+QPair<bool, double> SimplePlotterView::testLimit(bool plus, Lepton::CompiledExpression expr, double x0, double step){
+    //ternary search for max |x|
+    double & x = expr.getVariableReference("x");
+    double L = x0 + step/2, R = x0 + step;
+
+    for(int it = 0;it<100; ++it){
+        double m1 = L + (R-L) /3;
+        double m2 = R - (R-L) /3;
+        x = m1;
+        double v1 = expr.evaluate();
+        x = m2;
+        double v2 = expr.evaluate();
+        if (plus){
+            if (v1 < v2){
+                L = m1;
+             }
+            else{
+                R = m2;
+            }
+        }
+        else{
+            if(v1 > v2)
+            {
+                L = m1;
+            }
+            else{
+                R = m2;
+            }
+        }
+    }
+    x = L;
+    if(qAbs(expr.evaluate())>MAXCOORD)
+        return QPair<bool, double> (true, expr.evaluate());
+    return QPair<bool, double> (false, expr.evaluate());
+}
+
+void SimplePlotterView::limitZoom(){
+    if(MAXCOORD < 100)
+        return;
+    scale(10,10);
+    MAXCOORD/=10;
+}
+

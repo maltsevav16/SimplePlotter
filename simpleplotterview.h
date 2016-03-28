@@ -48,8 +48,8 @@ private:
 	QTimer *timer;
 	//	QVector<Simple2DPlot> data;
 	qreal radius = 0.05;
-	const int POINTSONSCREEN = 1000;
-	const qreal MAXCOORD = 1e6;
+    const int POINTSONSCREEN = 2000;
+    qreal MAXCOORD = 50000;
 	const qreal MINCOORD = 0.1;
 	QVector<QPair<std::string, QGraphicsItemGroup*> > pointGroups;
 	QVector<QGraphicsPathItem*> pathGroups;
@@ -76,6 +76,8 @@ private:
 	void showError(QString text);
 	void mouseReleaseEvent(QMouseEvent * e);
 	void updateBoard(QPointF scenePos);
+    QPair<bool, double> testLimit(bool plus, Lepton::CompiledExpression  expr, double x0, double step);
+    void limitZoom();
 };
 
 #endif // SIMPLEPLOTTERVIEW_H
