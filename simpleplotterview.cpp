@@ -1,11 +1,5 @@
 #include "simpleplotterview.h"
-#include <QInputDialog>
-#include <QGraphicsItemGroup>
-#include <QDir>
-#include<cmath>
-#include<QtAlgorithms>
-#include<functional>
-#include "lepton/include/Lepton.h"
+
 SimplePlotterView::SimplePlotterView(QWidget * parent)
 	:QGraphicsView(parent) {
 	this->setViewport(new QGLWidget(QGLFormat(QGL::SampleBuffers)));
@@ -17,6 +11,8 @@ SimplePlotterView::SimplePlotterView(QWidget * parent)
 	this->setScene(this->scene);
 	this->setDragMode(QGraphicsView::ScrollHandDrag);
 	this->setMouseTracking(true);
+    viewport()->setCursor(Qt::CrossCursor);
+
 	initCoordSystem();
     scale(100,100);
 }
@@ -123,6 +119,7 @@ void SimplePlotterView::keyReleaseEvent(QKeyEvent *event) {
 		break;
 	case Qt::Key_R:
 		centerOn(0, 0);
+        redraw();
 		break;
 	case Qt::Key_A:
 		addUserPlot();
@@ -133,6 +130,7 @@ void SimplePlotterView::keyReleaseEvent(QKeyEvent *event) {
 			if (key <= 0 || plotCount < key)
 				return;
 			expressions.remove(key - 1);
+            diffs.remove(key-1);
 			plotCount--;
 			redraw();
 			updateBoard(QPointF(0.0, 0.0));
@@ -200,13 +198,14 @@ void SimplePlotterView::addUserPlot() {
 	dialogOpen = false;
 	if (!ok) return;
 	try {
-		Lepton::CompiledExpression  expression = Lepton::Parser::parse(expr).optimize().createCompiledExpression();
+        Lepton::ParsedExpression parsed = Lepton::Parser::parse(expr).optimize();
+        Lepton::CompiledExpression  expression = parsed.createCompiledExpression();
         auto vars = expression.getVariables();
         if(vars.size()>1 || (vars.size()==1&& !vars.count("x"))){
             showError("Wrong variable name");
             return;
         }
-
+        diffs.push_back(QPair<std::string, Lepton::CompiledExpression>(expr,parsed.differentiate("x").createCompiledExpression()));
         expressions.push_back(QPair<std::string, Lepton::CompiledExpression>(expr, expression));
 		plotCount++;
 		redraw();
@@ -218,7 +217,7 @@ void SimplePlotterView::addUserPlot() {
 }
 
 void SimplePlotterView::redraw() {
-    MAXCOORD = 10000;
+    MAXCOORD = 1000;
 	auto rect = viewport()->rect();
 	for (int i = 0;i < pathGroups.size();++i) {
 		scene->removeItem(pathGroups[i]);
@@ -230,73 +229,86 @@ void SimplePlotterView::redraw() {
 	QPointF botRight = mapToScene(rect.bottomRight());
 	double delta = (botRight.x() - topLeft.x());
 	double deltaDiv = delta / POINTSONSCREEN;
-    bool prevInfinity;
-    int maxCount = 0;
-	for (int i = 0;i < plotCount;++i) {
-        prevInfinity = false;
-		Lepton::CompiledExpression expression = expressions[i].second;
-		QVector<QPointF> points;
-		if (!expression.getVariables().count("x")) {
-            for (double x = topLeft.x() - delta/2;x <= botRight.x() + delta/2;x += deltaDiv) {
-				points.push_back(QPointF(x, -expression.evaluate()));
-			}
-		}
-		else {
-			double & x = expression.getVariableReference("x");
 
-            x = topLeft.x() - delta/2;
-            for (;x <= botRight.x() + delta/2;x += deltaDiv) {
-                   auto maxV = testLimit(true, expression, x, deltaDiv);
-                   if(maxV.first){
-                       maxCount++;
-                       if(!prevInfinity)
-                                              points.push_back(QPointF(x,-MAXCOORD * 2));
-                               prevInfinity = true;
-                                continue;
-                   }
-                   auto minV = testLimit(false, expression, x, deltaDiv);
-                   if(minV.first){
-                       maxCount++;
-                       if(!prevInfinity)
-                           points.push_back(QPointF(x,MAXCOORD * 2));
-                       prevInfinity = true;
-                       continue;
-                   }
-                  prevInfinity = false;
-                  if(qAbs(maxV.second)>qAbs(minV.second)){
-                      points.push_back(QPointF(x, -maxV.second));
-                  }
-                  else{
-                      points.push_back(QPointF(x, -minV.second));
-                  }
-                }
-		}
-		QPainterPath path(points[0]);
-		for (int i = 1;i < points.size();++i) {
-			path.lineTo(points[i]);
-		}
+	for (int i = 0;i < plotCount;++i) {
+		Lepton::CompiledExpression expression = expressions[i].second;
+
+
+
+        QPainterPath path;
+        bool wasPlusInf = false;
+        bool wasMinusInf = false;
+        auto vars = expression.getVariables();
+        if(vars.size()!=1||!vars.count("x")){
+            path.moveTo(-MAXCOORD *4,-expression.evaluate());
+            path.lineTo(MAXCOORD * 4, -expression.evaluate());
+        }
+
+        else{
+        double & x = expression.getVariableReference("x");
+
+        x = topLeft.x() - delta/2;
+        path.moveTo(x,expression.evaluate());
+        for (;x <= botRight.x() + delta/2;x += deltaDiv) {
+        //deltaDiv = 0.01;
+        //for(x = -3;x<3;x+=deltaDiv){
+            double xOld = x;
+            QVector<double> values;
+            for(int j = -500;j<=500;++j){
+                x = xOld+deltaDiv/1000*j;
+                values.push_back(expression.evaluate());
+            }
+            double minV=values[0], maxV = values[0];
+            for(double v: values){
+                minV = qMin(v,minV);
+                maxV = qMax(v,maxV);
+            }
+
+            //std::cout << x<<' '<<values.last()<<'\n';
+            //if(values[0]>MAXCOORD/10||values.last()<-MAXCOORD/10){
+            //    continue;
+            //}
+
+            if(minV<-MAXCOORD){
+                if(!wasMinusInf)
+               path.lineTo(x,MAXCOORD*4);
+                wasMinusInf = true;
+            }
+            else
+                wasMinusInf = false;
+
+           if(maxV>MAXCOORD){
+               if(!wasPlusInf)
+                 path.lineTo(x,-MAXCOORD*4);
+               wasPlusInf = true;
+           }
+           else
+               wasPlusInf = false;
+            double midVal = values[values.size()/2];
+            path.lineTo(QPointF(x,-midVal));
+            x = xOld;
+        }
+        }
+
 		QPen pathPen(Colors[i]);//FIX
 		pathPen.setCosmetic(true);
-		pathPen.setWidthF(2);
+        pathPen.setWidthF(3);
 		auto pathItem = scene->addPath(path, pathPen);
-		pathGroups.push_back(pathItem);
-        if(maxCount > 20){
-            //to prevent big red square
-            limitZoom();
-
-        }
+        pathGroups.push_back(pathItem);
 	}
 }
 
 
 void SimplePlotterView::showError(QString text) {
-	QMessageBox::critical(this, "Error", text);
+    QMessageBox::critical(this, "Error",text);
 }
 
 void SimplePlotterView::mouseReleaseEvent(QMouseEvent *e) {
 	QGraphicsView::mouseReleaseEvent(e);
 
 	redraw();
+    viewport()->setCursor(Qt::CrossCursor);
+
 }
 
 void SimplePlotterView::updateBoard(QPointF scenePos) {
@@ -305,11 +317,21 @@ void SimplePlotterView::updateBoard(QPointF scenePos) {
 	for (int i = 0;i < plotCount;++i) {
 		formatted.append(QString("\n%1 : %2").arg(QString::number(i + 1), QString::fromStdString(expressions[i].first)));
 	}
-	board->setText(formatted);
+    if(diffs.size()&&diffs[0].second.getVariables().count("x")){
+
+        double &x = diffs[0].second.getVariableReference("x");
+        x = scenePos.x();
+        formatted.append(QString("\n%1").arg(QString::number(diffs[0].second.evaluate())));
+    }
+    board->setText(formatted);
 }
 
 QPair<bool, double> SimplePlotterView::testLimit(bool plus, Lepton::CompiledExpression expr, double x0, double step){
     //ternary search for max |x|
+    auto vars = expr.getVariables();
+    if(vars.size()!=1 || (vars.size()==1&& !vars.count("x"))){
+        return QPair<bool, double> (false,0);
+    }
     double & x = expr.getVariableReference("x");
     double L = x0 + step/2, R = x0 + step;
 
@@ -320,6 +342,9 @@ QPair<bool, double> SimplePlotterView::testLimit(bool plus, Lepton::CompiledExpr
         double v1 = expr.evaluate();
         x = m2;
         double v2 = expr.evaluate();
+        if(v1==INFINITY){
+            int c = 1;
+        }
         if (plus){
             if (v1 < v2){
                 L = m1;
@@ -344,10 +369,24 @@ QPair<bool, double> SimplePlotterView::testLimit(bool plus, Lepton::CompiledExpr
     return QPair<bool, double> (false, expr.evaluate());
 }
 
-void SimplePlotterView::limitZoom(){
-    if(MAXCOORD < 100)
-        return;
-    scale(10,10);
-    MAXCOORD/=10;
+
+void SimplePlotterView::dragEnterEvent(QDragEnterEvent *e){
+    //QDrag * drag = new QDrag(this);
+
+    QGraphicsView::dragEnterEvent(e);
+    viewport()->setCursor(Qt::CrossCursor);
+
 }
 
+void SimplePlotterView::dragLeaveEvent(QDragLeaveEvent *e){
+
+    QGraphicsView::dragLeaveEvent(e);
+    viewport()->setCursor(Qt::CrossCursor);
+
+}
+
+void SimplePlotterView::mousePressEvent(QMouseEvent *event){
+    QGraphicsView::mousePressEvent(event);
+    viewport()->setCursor(Qt::CrossCursor);
+
+}

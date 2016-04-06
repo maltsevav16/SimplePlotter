@@ -9,6 +9,15 @@
 #include<QString>
 #include<QGLWidget>
 #include<algorithm>
+#include <QInputDialog>
+#include <QGraphicsItemGroup>
+#include <QDir>
+#include<cmath>
+#include<QtAlgorithms>
+#include<functional>
+#include<iostream>
+#include<QDrag>
+#include "lepton/include/Lepton.h"
 //#include "simple2dplot.h"
 #include "lepton/include/Lepton.h"
 /*! \class SimplePlotterView
@@ -48,12 +57,14 @@ private:
 	QTimer *timer;
 	//	QVector<Simple2DPlot> data;
 	qreal radius = 0.05;
-    const int POINTSONSCREEN = 2000;
+    const int POINTSONSCREEN = 1000;
     qreal MAXCOORD = 50000;
 	const qreal MINCOORD = 0.1;
 	QVector<QPair<std::string, QGraphicsItemGroup*> > pointGroups;
 	QVector<QGraphicsPathItem*> pathGroups;
 	QVector<QPair<std::string, Lepton::CompiledExpression> > expressions;
+    QVector<QPair<std::string, Lepton::CompiledExpression> > diffs;
+
 	const QString HELPSTRING = "This is a simple plotter QT plugin.\nHotkeys: ZX - Zoom x2, QE - Rotate 15 degrees,\nH - Help, numbers - to remove plots ";
 	QGraphicsSimpleTextItem * board;
 	QPen coordPen;
@@ -77,7 +88,9 @@ private:
 	void mouseReleaseEvent(QMouseEvent * e);
 	void updateBoard(QPointF scenePos);
     QPair<bool, double> testLimit(bool plus, Lepton::CompiledExpression  expr, double x0, double step);
-    void limitZoom();
+    void dragEnterEvent(QDragEnterEvent *e);
+    void mousePressEvent(QMouseEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent *e);
 };
 
 #endif // SIMPLEPLOTTERVIEW_H
